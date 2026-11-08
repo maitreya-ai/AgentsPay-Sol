@@ -31,6 +31,7 @@ export function loadConfig() {
     gracePeriod: Number(env("GRACE_PERIOD", "900")),
     attestationTtl: Number(env("ATTESTATION_TTL", String(24 * 3600))),
     settleEveryMs: Number(env("SETTLE_EVERY_MS", "15000")),
+    attestationPollMs: Number(env("ATTESTATION_POLL_MS", "5000")),
     settleMinAmount: BigInt(env("SETTLE_MIN_AMOUNT", "1")!),
     backend,
     upstreamUrl: env("UPSTREAM_URL", "http://127.0.0.1:11434"),

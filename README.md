@@ -12,8 +12,9 @@ Pay for compute only when the hardware proves it.
 ![Solana](https://img.shields.io/badge/Solana-program-8a5cff.svg)
 ![Anchor](https://img.shields.io/badge/Anchor-1.2.2-3ee9a9.svg)
 ![Bun](https://img.shields.io/badge/Bun-1.4-f9f1e1.svg)
+[![Devnet](https://img.shields.io/badge/devnet-live-14d38f.svg)](https://explorer.solana.com/address/EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT?cluster=devnet)
 
-[Overview](docs/project-overview.md) · [Architecture](docs/architecture.md) · [Quickstart](#quickstart) · [SDK](#use-the-sdk) · [Website](#website)
+[Overview](docs/project-overview.md) · [Architecture](docs/architecture.md) · [Live on devnet](#live-on-devnet) · [Quickstart](#quickstart) · [SDK](#use-the-sdk) · [Website](#website)
 
 <img src="docs/assets/site-hero.png" alt="AgentsPay website" width="860" />
 
@@ -57,6 +58,25 @@ flowchart LR
 | ⭐ **Paid feedback** | Ratings only from sessions that settled real value, emitted as `PaidFeedback` for the 8004 Agent Registry. |
 
 Plus an off-chain toolkit in TypeScript on **Bun**: SDK, OpenAI-compatible provider gateway with sealed prompts, attestation verifier, agent demo and website.
+
+## Live on devnet
+
+| | Address |
+| --- | --- |
+| **Program** | [`EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT`](https://explorer.solana.com/address/EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT?cluster=devnet) |
+| Config | [`BkoKLmzuh7RsZxd4oDnrTMg32e2bM2pTVHMRXg2bW5fL`](https://explorer.solana.com/address/BkoKLmzuh7RsZxd4oDnrTMg32e2bM2pTVHMRXg2bW5fL?cluster=devnet) |
+| Test USDC mint | [`5oM8u9DrsYYYbbjQyhYLW8uxb3kv8Ls6yQ7PqrzVCJac`](https://explorer.solana.com/address/5oM8u9DrsYYYbbjQyhYLW8uxb3kv8Ls6yQ7PqrzVCJac?cluster=devnet) |
+| Demo provider | [`D7nZAi76dafwPSrMoBX6ysdegPAj6A33eNuab5cjpcrd`](https://explorer.solana.com/address/D7nZAi76dafwPSrMoBX6ysdegPAj6A33eNuab5cjpcrd?cluster=devnet) |
+
+Real transactions from the end-to-end demo on devnet:
+
+- 🛡️ [Verifier approves a provider's TEE attestation](https://explorer.solana.com/tx/5JWMqeBxTTqY9THZ2gyaAoD6sbxZpedaoK11PJPs8S6PsRh5H2wiD4Ew89Z4LiE8nWdQVi3Zg6dJmfwuMakJN3nT?cluster=devnet)
+- ⚡ [One transaction settles 3 paid inference calls (voucher + enclave receipt) and refunds the rest](https://explorer.solana.com/tx/46WqbkgqmwT9GoYeA8xZgCCdZLQpxSoAiixZDNuogqzrBDp9ZsX1nezfQQF5sX3sdnx7wKqS66mr3fjqyfqMLpCr?cluster=devnet)
+- ⭐ [Payment-backed rating from the agent](https://explorer.solana.com/tx/kF8Edi4fDEDaFPV34nryv3ruoUSU7epsdYwcVFikwkPjYPXgVQ85g8mSRqiCHe6djDFZt4gpsE5hozJf43ENGHp?cluster=devnet)
+
+All addresses are in [`deployments/devnet.json`](deployments/devnet.json). The devnet deployment uses the **simulated TEE** and a one-member verifier committee run by the maintainer, so treat it as a demo, not a security boundary.
+
+Run the agent yourself against devnet: `bash scripts/demo-devnet.sh` (after `bun run bootstrap` with `RPC_URL=https://api.devnet.solana.com`; see [Deploy to devnet](#deploy-to-devnet)).
 
 ## Quickstart
 
@@ -189,7 +209,8 @@ The site explains the problem and protocol and includes a **live settlement simu
 - [ ] 8004 bridge: `PaidFeedback` → `giveFeedback`
 - [ ] ZK attestation: SP1 / RISC Zero DCAP proof → Groth16 on `alt_bn128`
 - [ ] Payment Channels interop: AgentsPay as an attested PDA payee
-- [ ] Devnet deployment and audit
+- [x] Devnet deployment
+- [ ] Security audit
 
 ## Contributing
 

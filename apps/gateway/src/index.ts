@@ -40,6 +40,8 @@ import { Ledger, type SessionLedger } from "./ledger.js";
 
 const cfg = loadConfig();
 const log = (...a: unknown[]) => console.log(`[gateway ${new Date().toISOString()}]`, ...a);
+// Public RPCs rate-limit (429). A failed background poll must never take the gateway down.
+process.on("unhandledRejection", (e) => log("unhandled rejection", String(e).slice(0, 300)));
 
 const connection = new Connection(cfg.rpcUrl, "confirmed");
 const operator = loadOrCreateKeypair(cfg.operatorKeypair);
@@ -371,7 +373,11 @@ async function settlementTick() {
 // ---------------------------------------------------------------------------
 
 await boot();
-Bun.serve({ fetch: app.fetch, port: cfg.port });
+// idleTimeout: settle+close waits for on-chain confirmation, which can exceed Bun's 10s default.
+Bun.serve({ fetch: app.fetch, port: cfg.port, idleTimeout: 120 });
 log(`listening on ${cfg.publicUrl} (tee=${cfg.tee}, backend=${cfg.backend}, price=${cfg.pricePerUnit}/${cfg.unit})`);
-setInterval(() => void refreshAttestation(), 2_000);
+setInterval(
+  () => void refreshAttestation().catch((e) => log("attestation refresh failed", String(e).slice(0, 200))),
+  cfg.attestationPollMs,
+);
 setInterval(() => void settlementTick(), cfg.settleEveryMs);

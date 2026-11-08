@@ -73,7 +73,7 @@ scripts/                     localnet, bootstrap, demo, IDL sync
 
 ## 3. On-chain program
 
-Program ID (localnet/devnet placeholder): `EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT`
+Program ID (localnet + **devnet**): `EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT`. Devnet addresses are in [`deployments/devnet.json`](../deployments/devnet.json).
 
 ### 3.1 Accounts
 

@@ -27,6 +27,7 @@ const opts = {
 };
 
 const log = (...a: unknown[]) => console.log(`[verifier ${new Date().toISOString()}]`, ...a);
+process.on("unhandledRejection", (e) => log("unhandled rejection", String(e).slice(0, 300)));
 const connection = new Connection(rpcUrl, "confirmed");
 const verifier = loadOrCreateKeypair(keyPath);
 const client = AgentsPayClient.fromKeypair(connection, verifier, { programId });

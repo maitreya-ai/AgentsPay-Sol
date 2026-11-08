@@ -86,8 +86,8 @@ AgentsPay is an Anchor program plus a TypeScript toolkit (Bun). A provider's gat
 
 | Area | Status |
 | --- | --- |
-| Program | Feature-complete for v0.1; all tests pass on LiteSVM. Not deployed to devnet or mainnet. |
-| SDK / gateway / verifier / demo | Working end to end on `solana-test-validator` with the simulated TEE. |
+| Program | Feature-complete for v0.1; all tests pass on LiteSVM. **Live on devnet** at `EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT`; not on mainnet. |
+| SDK / gateway / verifier / demo | Working end to end on `solana-test-validator` and on **devnet** with the simulated TEE. |
 | TDX path | Implemented (quote generation via configfs-tsm, parsing, measurement derivation); not yet exercised on real hardware. |
 | Website | Builds; static, deployable to any host. |
 

@@ -1,0 +1,11 @@
+{
+  "network": "devnet",
+  "rpcUrl": "https://api.devnet.solana.com",
+  "programId": "EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT",
+  "usdcMint": "5oM8u9DrsYYYbbjQyhYLW8uxb3kv8Ls6yQ7PqrzVCJac",
+  "usdcDecimals": 6,
+  "treasury": "HZ6e9Cqh86amGdNDx7k3k8orDX7z8jVGDUNgstpU5hPa",
+  "verifiers": [
+    "GNxforhU9UUwrjKSyAWtiA2FAQDRWLL6U54dEDDZmGxR"
+  ]
+}
