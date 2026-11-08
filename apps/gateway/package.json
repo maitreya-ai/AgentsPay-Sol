@@ -1,0 +1,19 @@
+{
+  "name": "@agentspay/gateway",
+  "version": "0.1.0",
+  "description": "Reference AgentsPay provider gateway: OpenAI-compatible inference behind attested, metered payment sessions",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@agentspay/sdk": "workspace:*",
+    "@noble/hashes": "1.8.0",
+    "@solana/web3.js": "1.99.0",
+    "hono": "4.10.6",
+    "tweetnacl": "1.0.3"
+  }
+}

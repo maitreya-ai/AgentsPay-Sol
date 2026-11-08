@@ -1,0 +1,16 @@
+{
+  "name": "@agentspay/verifier",
+  "version": "0.1.0",
+  "description": "AgentsPay attestation verifier: checks TEE evidence off-chain and co-signs attestations on-chain",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun src/index.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@agentspay/sdk": "workspace:*",
+    "@solana/web3.js": "1.99.0"
+  }
+}

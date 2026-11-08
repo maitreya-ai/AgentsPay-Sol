@@ -1,0 +1,35 @@
+{
+  "name": "agentspay-sol",
+  "private": true,
+  "description": "Attestation-gated, metered payments for AI agents on Solana",
+  "license": "MIT",
+  "repository": "https://github.com/maitreya-ai/AgentsPay-Sol",
+  "packageManager": "bun@1.4.2",
+  "engines": {
+    "bun": ">=1.4"
+  },
+  "scripts": {
+    "build:program": "anchor build && bash scripts/sync-idl.sh",
+    "test:program": "cargo test -p agentspay",
+    "test": "bun run --filter \"*\" test",
+    "typecheck": "bun run --filter \"*\" typecheck",
+    "localnet": "bash scripts/localnet.sh",
+    "bootstrap": "bun scripts/bootstrap.ts",
+    "gateway": "bun apps/gateway/src/index.ts",
+    "verifier": "bun apps/verifier/src/index.ts",
+    "demo:agent": "bun examples/agent-demo/src/index.ts",
+    "demo": "bash scripts/demo.sh",
+    "web": "bun run --filter @agentspay/web dev",
+    "web:build": "bun run --filter @agentspay/web build"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "examples/*",
+    "scripts"
+  ],
+  "devDependencies": {
+    "@types/bun": "1.4.4",
+    "typescript": "5.9.3"
+  }
+}

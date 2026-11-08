@@ -1,0 +1,25 @@
+{
+  "name": "@agentspay/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for AgentsPay: attestation-gated, metered payments for AI agents on Solana",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./node": "./src/node.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@anchor-lang/core": "1.2.2",
+    "@noble/hashes": "1.8.0",
+    "@solana/spl-token": "0.4.15",
+    "@solana/web3.js": "1.99.0",
+    "bs58": "6.0.0",
+    "tweetnacl": "1.0.3"
+  }
+}
