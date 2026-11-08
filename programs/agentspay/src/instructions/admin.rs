@@ -32,6 +32,8 @@ pub struct MeasurementArgs {
     pub label: String,
 }
 
+/// Only the program's upgrade authority can initialize, so nobody can
+/// front-run the deployer and seize the admin role.
 #[derive(Accounts)]
 pub struct Initialize<'info> {
     #[account(mut)]
@@ -44,6 +46,10 @@ pub struct Initialize<'info> {
         bump
     )]
     pub config: Account<'info, Config>,
+    #[account(constraint = program.programdata_address()? == Some(program_data.key()) @ AgentsPayError::Unauthorized)]
+    pub program: Program<'info, crate::program::Agentspay>,
+    #[account(constraint = program_data.upgrade_authority_address == Some(admin.key()) @ AgentsPayError::Unauthorized)]
+    pub program_data: Account<'info, ProgramData>,
     pub system_program: Program<'info, System>,
 }
 

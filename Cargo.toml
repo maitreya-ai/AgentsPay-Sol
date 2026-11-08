@@ -11,6 +11,7 @@ repository = "https://github.com/maitreya-ai/AgentsPay-Sol"
 [profile.release]
 overflow-checks = true
 lto = "fat"
+opt-level = "z"
 codegen-units = 1
 
 [profile.release.build-override]

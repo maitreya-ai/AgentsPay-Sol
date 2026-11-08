@@ -182,6 +182,7 @@ impl Env {
         svm.add_program(PROGRAM_ID, &so).unwrap();
 
         let admin = Keypair::new();
+        set_upgrade_authority(&mut svm, &admin.pubkey());
         let treasury = Keypair::new();
         svm.airdrop(&admin.pubkey(), 100_000_000_000).unwrap();
         let verifiers: Vec<Keypair> = (0..verifier_count).map(|_| Keypair::new()).collect();
@@ -209,16 +210,7 @@ impl Env {
             max_attestation_ttl: 7 * DAY,
             allow_simulated_tee: true,
         };
-        let ix = Instruction {
-            program_id: PROGRAM_ID,
-            accounts: acc::Initialize {
-                admin: env.admin.pubkey(),
-                config: env.config,
-                system_program: SYSTEM_PROGRAM,
-            }
-            .to_account_metas(None),
-            data: ix::Initialize { args }.data(),
-        };
+        let ix = initialize_ix(&env.admin.pubkey(), args);
         let admin = env.admin.insecure_clone();
         assert_ok(env.send(&[ix], &admin, &[]));
         env
@@ -609,6 +601,38 @@ impl Env {
             .to_account_metas(None),
             data: ix::RevokeAttestation { reason: 1 }.data(),
         }
+    }
+}
+
+pub const BPF_LOADER_UPGRADEABLE: Pubkey =
+    anchor_lang::pubkey!("BPFLoaderUpgradeab1e11111111111111111111111");
+
+pub fn programdata_address() -> Pubkey {
+    Pubkey::find_program_address(&[PROGRAM_ID.as_ref()], &BPF_LOADER_UPGRADEABLE).0
+}
+
+/// LiteSVM deploys with no upgrade authority; set one, as `solana program deploy` would.
+/// ProgramData metadata: u32 tag (3) | u64 slot | Option<Pubkey> (1 + 32).
+pub fn set_upgrade_authority(svm: &mut LiteSVM, authority: &Pubkey) {
+    let addr = programdata_address();
+    let mut acct = svm.get_account(&addr).expect("programdata");
+    acct.data[12] = 1;
+    acct.data[13..45].copy_from_slice(authority.as_ref());
+    svm.set_account(addr, acct).unwrap();
+}
+
+pub fn initialize_ix(admin: &Pubkey, args: InitializeArgs) -> Instruction {
+    Instruction {
+        program_id: PROGRAM_ID,
+        accounts: acc::Initialize {
+            admin: *admin,
+            config: config_pda(),
+            program: PROGRAM_ID,
+            program_data: programdata_address(),
+            system_program: SYSTEM_PROGRAM,
+        }
+        .to_account_metas(None),
+        data: ix::Initialize { args }.data(),
     }
 }
 

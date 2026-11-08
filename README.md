@@ -67,7 +67,7 @@ git clone https://github.com/maitreya-ai/AgentsPay-Sol.git && cd AgentsPay-Sol
 bun install
 
 anchor build && bash scripts/sync-idl.sh   # build program + sync IDL into the SDK
-cargo test -p agentspay                    # 30 program tests (unit + LiteSVM)
+cargo test -p agentspay                    # 31 program tests (unit + LiteSVM)
 bun run test                               # SDK + web tests
 
 bun run demo                               # end-to-end on localnet ↓
@@ -94,6 +94,14 @@ bun run demo                               # end-to-end on localnet ↓
 ```
 
 Prefer separate terminals? Run `bun run localnet`, `bun run bootstrap`, `bun run verifier`, `bun run gateway` and `bun run demo:agent`.
+
+### Deploy to devnet
+
+```bash
+bash scripts/deploy-devnet.sh   # deploys with your Solana CLI wallet as upgrade authority, then bootstraps
+```
+
+`initialize` only accepts the program's **upgrade authority**, so nobody can front-run the deployer. Public addresses are written to `deployments/devnet.json`. To run the gateway, verifier and agent against devnet, point them at it with `RPC_URL=https://api.devnet.solana.com`.
 
 ## Use the SDK
 

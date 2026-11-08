@@ -10,7 +10,7 @@
  *  5. Cooperative close (provider settles once, refunds the rest), then rate the provider.
  */
 import { resolve } from "node:path";
-import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import { getAccount, getAssociatedTokenAddressSync } from "@solana/spl-token";
 import {
   AgentsPayClient,
@@ -81,7 +81,10 @@ console.log(`  keys match ✔  price ${offer.pricePerUnit} base units / ${offer.
 
 // 3. Vault + session --------------------------------------------------------------
 step("Owner funds an AgentVault; agent opens a session under its policy");
-await connection.confirmTransaction(await connection.requestAirdrop(agent.publicKey, 2e9));
+if ((await connection.getBalance(agent.publicKey)) < 50_000_000) {
+  // Agent needs a little SOL for rent + fees; the owner tops it up (no faucet needed on devnet).
+  await ownerClient.sendIxs([SystemProgram.transfer({ fromPubkey: owner.publicKey, toPubkey: agent.publicKey, lamports: 100_000_000 })]);
+}
 const vault = ownerClient.pdas.vault(owner.publicKey, agent.publicKey, usdc);
 if (!(await ownerClient.fetchVault(vault))) {
   await ownerClient.createVault(agent.publicKey, usdc, {

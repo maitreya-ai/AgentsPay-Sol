@@ -10,11 +10,11 @@ export function loadConfig() {
   const dep = readDeployment();
   const port = Number(env("PORT", "8787"));
   const mint = env("ACCEPT_MINT", dep?.usdcMint);
-  if (!mint) throw new Error("ACCEPT_MINT not set and no .agentspay/deployment.json (run `pnpm bootstrap`)");
+  if (!mint) throw new Error("ACCEPT_MINT not set and no .agentspay/deployment.json (run `bun run bootstrap`)");
   const backend = env("MODEL_BACKEND", "echo") as "echo" | "openai";
   return {
     rpcUrl: env("RPC_URL", dep?.rpcUrl ?? "http://127.0.0.1:8899")!,
-    network: env("NETWORK", "localnet") as "localnet" | "devnet" | "mainnet-beta" | "testnet",
+    network: env("NETWORK", dep?.network ?? "localnet") as "localnet" | "devnet" | "mainnet-beta" | "testnet",
     programId: new PublicKey(env("PROGRAM_ID", dep?.programId ?? "EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT")!),
     operatorKeypair: env("OPERATOR_KEYPAIR", resolve(stateDir(), "operator.json"))!,
     payout: env("PAYOUT"),

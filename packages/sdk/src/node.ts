@@ -22,6 +22,7 @@ export function loadOrCreateKeypair(path: string): Keypair {
 }
 
 export interface LocalDeployment {
+  network: "localnet" | "devnet" | "mainnet-beta" | "testnet";
   rpcUrl: string;
   programId: string;
   usdcMint: string;
@@ -35,7 +36,9 @@ export function readDeployment(): LocalDeployment | null {
   return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as LocalDeployment) : null;
 }
 
-export function writeDeployment(d: LocalDeployment) {
-  mkdirSync(stateDir(), { recursive: true });
-  writeFileSync(resolve(stateDir(), "deployment.json"), JSON.stringify(d, null, 2));
+export function writeDeployment(d: LocalDeployment, path = resolve(stateDir(), "deployment.json")) {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, `${JSON.stringify(d, null, 2)}\n`);
 }
+
+export const isLocalRpc = (url: string) => /127\.0\.0\.1|localhost/.test(url);

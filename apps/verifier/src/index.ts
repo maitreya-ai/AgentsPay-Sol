@@ -12,7 +12,7 @@
 import { resolve } from "node:path";
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { AgentsPayClient, AttestationStatus } from "@agentspay/sdk";
-import { loadOrCreateKeypair, readDeployment, stateDir } from "@agentspay/sdk/node";
+import { isLocalRpc, loadOrCreateKeypair, readDeployment, stateDir } from "@agentspay/sdk/node";
 
 import { fetchEvidence, shortKey, verifyEvidence } from "./verify.js";
 
@@ -80,7 +80,7 @@ async function recheckValid() {
   }
 }
 
-if (dep && (await connection.getBalance(verifier.publicKey)) < LAMPORTS_PER_SOL / 10) {
+if (isLocalRpc(rpcUrl) && (await connection.getBalance(verifier.publicKey)) < LAMPORTS_PER_SOL / 10) {
   await connection.confirmTransaction(await connection.requestAirdrop(verifier.publicKey, LAMPORTS_PER_SOL));
 }
 log(`verifier ${verifier.publicKey.toBase58()} watching ${programId.toBase58()} on ${rpcUrl}`);

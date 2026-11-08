@@ -53,7 +53,7 @@ export function Modules() {
       id="modules"
       eyebrow="What's in the box"
       title="Five on-chain modules, one Anchor program."
-      lead="23 instructions, 30 Rust tests (unit + LiteSVM integration). Each module addresses one gap from the problem section."
+      lead="23 instructions, 31 Rust tests (unit + LiteSVM integration). Each module addresses one gap from the problem section."
     >
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {modules.map(({ icon: Icon, name, pitch, ixs, points }) => (

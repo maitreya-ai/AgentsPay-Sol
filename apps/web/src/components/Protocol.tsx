@@ -88,7 +88,7 @@ export function Security() {
 const commands = `git clone ${REPO_URL}.git && cd AgentsPay-Sol
 bun install
 anchor build && bash scripts/sync-idl.sh
-cargo test -p agentspay      # 30 program tests
+cargo test -p agentspay      # 31 program tests
 bun run demo                 # validator → verifier → gateway → agent`;
 
 export function Quickstart() {

@@ -27,6 +27,7 @@ export type VaultAccount = IdlAccounts<Agentspay>["agentVault"];
 export type OfferingAccount = IdlAccounts<Agentspay>["offering"];
 
 export const INSTRUCTIONS_SYSVAR = new PublicKey("Sysvar1nstructions1111111111111111111111111");
+export const BPF_LOADER_UPGRADEABLE = new PublicKey("BPFLoaderUpgradeab1e11111111111111111111111");
 
 /** Minimal wallet adapter around a Keypair (works in Node and browsers). */
 export class KeypairWallet implements Wallet {
@@ -142,6 +143,11 @@ export class AgentsPayClient {
     return this.pdas.measurement(att.teeType, Uint8Array.from(att.measurement));
   }
 
+  /** ProgramData account of the (upgradeable) AgentsPay program. */
+  programDataAddress(): PublicKey {
+    return PublicKey.findProgramAddressSync([this.program.programId.toBuffer()], BPF_LOADER_UPGRADEABLE)[0];
+  }
+
   /** Mirrors `Attestation::is_valid` on-chain. */
   static isAttestationValid(att: AttestationAccount | null, m: MeasurementAccount | null, now: number): boolean {
     if (!att || !m) return false;
@@ -217,7 +223,13 @@ export class AgentsPayClient {
         maxAttestationTtl: bn(args.maxAttestationTtl),
         allowSimulatedTee: args.allowSimulatedTee,
       })
-      .accountsPartial({ admin: this.me, config: this.pdas.config() })
+      // Only the program's upgrade authority may initialize (prevents front-running).
+      .accountsPartial({
+        admin: this.me,
+        config: this.pdas.config(),
+        program: this.program.programId,
+        programData: this.programDataAddress(),
+      })
       .rpc();
   }
 

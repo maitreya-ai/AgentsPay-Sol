@@ -94,7 +94,7 @@ Token escrows are canonical associated token accounts owned by the session, vaul
 
 | Module | Instruction | Signer | Notes |
 | --- | --- | --- | --- |
-| Governance | `initialize` | admin | creates `Config` |
+| Governance | `initialize` | admin = program **upgrade authority** | creates `Config`; can't be front-run |
 | | `update_config` | admin | rotate admin, treasury, committee, fee, TTL, simulated flag, pause |
 | | `approve_measurement` | admin | allowlist a workload |
 | | `revoke_measurement` | admin **or any verifier** | invalidates every dependent attestation instantly |
@@ -292,7 +292,6 @@ PaidFeedback { session, provider, agent_asset, payer, mint, settled, units, rati
 ## 13. Known limitations
 
 - **Unaudited.** Localnet only. Do not use with real funds.
-- `initialize` is first-caller-wins. Deploy and initialize atomically; gating on the upgrade authority is planned.
 - The verifier fetches arbitrary `evidence_uri`s. Run it isolated (SSRF), with timeouts and size limits (implemented).
 - The gateway's metering ledger is a local JSON file, single process. Production needs a durable store.
 - Settlement requires the attestation to be valid *at settle time*, so providers must settle before expiry and re-attest on rotation.

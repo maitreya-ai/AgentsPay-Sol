@@ -1124,6 +1124,13 @@
           }
         },
         {
+          "name": "program",
+          "address": "EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT"
+        },
+        {
+          "name": "program_data"
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }

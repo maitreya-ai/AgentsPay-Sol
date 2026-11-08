@@ -66,7 +66,7 @@ AgentsPay is an Anchor program plus a TypeScript toolkit (Bun). A provider's gat
 
 **In scope (v0.1, this repo)**
 
-- Anchor program (23 instructions, 30 Rust tests, 21 of them LiteSVM integration tests).
+- Anchor program (23 instructions, 31 Rust tests, 22 of them LiteSVM integration tests).
 - TypeScript SDK: PDAs, message codecs, sealed prompts, evidence helpers and a typed client.
 - Reference gateway: OpenAI-compatible, sealed prompts, voucher admission, enclave receipts, a settlement worker. Simulated and Intel TDX (configfs-tsm) enclaves.
 - Verifier service: simulated + TDX evidence checks, an external DCAP hook, a re-check and revoke loop.

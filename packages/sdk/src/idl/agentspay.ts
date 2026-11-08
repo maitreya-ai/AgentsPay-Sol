@@ -1130,6 +1130,13 @@ export type Agentspay = {
           }
         },
         {
+          "name": "program",
+          "address": "EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT"
+        },
+        {
+          "name": "programData"
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
