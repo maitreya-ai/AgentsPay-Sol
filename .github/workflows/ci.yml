@@ -15,15 +15,25 @@ jobs:
         with:
           toolchain: "1.97.1"
       - uses: Swatinem/rust-cache@v2
-      - name: Install Solana CLI
-        run: |
-          sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)"
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
-      - name: Cache platform-tools
+      - name: Cache Solana CLI + platform-tools
         uses: actions/cache@v4
         with:
-          path: ~/.cache/solana
-          key: solana-platform-tools-v1.57-${{ runner.os }}
+          path: |
+            ~/.local/share/solana
+            ~/.cache/solana
+          key: solana-4.4.1-platform-tools-v1.57-${{ runner.os }}
+      - name: Install Solana CLI
+        # GitHub release downloads occasionally fail; retry the installer.
+        run: |
+          BIN="$HOME/.local/share/solana/install/active_release/bin"
+          if [ ! -x "$BIN/solana" ]; then
+            for i in 1 2 3 4; do
+              sh -c "$(curl -sSfL --retry 5 --retry-delay 10 https://release.anza.xyz/v4.4.1/install)" && break
+              echo "install attempt $i failed, retrying in 30s"; sleep 30
+            done
+          fi
+          "$BIN/solana" --version
+          echo "$BIN" >> "$GITHUB_PATH"
       - name: Build SBF program
         # platform-tools downloads from GitHub releases occasionally 504; retry.
         run: |
