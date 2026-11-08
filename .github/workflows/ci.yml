@@ -19,8 +19,19 @@ jobs:
         run: |
           sh -c "$(curl -sSfL https://release.anza.xyz/v4.4.1/install)"
           echo "$HOME/.local/share/solana/install/active_release/bin" >> "$GITHUB_PATH"
+      - name: Cache platform-tools
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/solana
+          key: solana-platform-tools-v1.57-${{ runner.os }}
       - name: Build SBF program
-        run: cargo build-sbf --manifest-path programs/agentspay/Cargo.toml
+        # platform-tools downloads from GitHub releases occasionally 504; retry.
+        run: |
+          for i in 1 2 3; do
+            cargo build-sbf --manifest-path programs/agentspay/Cargo.toml && exit 0
+            echo "build-sbf attempt $i failed, retrying in 20s"; sleep 20
+          done
+          exit 1
       - name: Test
         run: cargo test -p agentspay
 
