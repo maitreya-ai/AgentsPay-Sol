@@ -1,0 +1,14 @@
+.anchor
+.DS_Store
+target
+**/*.rs.bk
+node_modules
+dist
+test-ledger
+.surfpool
+.env
+.env.*
+!.env.example
+*.log
+.agentspay
+coverage
