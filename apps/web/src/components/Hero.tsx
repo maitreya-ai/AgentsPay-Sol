@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Check, ShieldCheck } from "lucide-react";
+import { ArrowRight, BookOpen, Check, FlaskConical } from "lucide-react";
 
 import { DOCS_URL, GithubMark, Pill, REPO_URL } from "./ui";
 
@@ -61,8 +61,8 @@ export function Hero() {
 
       <div className="relative mx-auto grid max-w-6xl gap-14 px-4 pt-20 pb-24 sm:px-6 sm:pt-28 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div>
-          <Pill>
-            <ShieldCheck className="size-3.5" /> open source · Solana · MIT
+          <Pill tone="amber">
+            <FlaskConical className="size-3.5" /> research prototype · devnet demo · MIT
           </Pill>
           <h1 className="mt-6 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
             AI agents should pay for compute <span className="text-gradient">only when the hardware proves it.</span>
@@ -86,6 +86,11 @@ export function Hero() {
               <BookOpen className="size-4" /> Architecture
             </a>
           </div>
+          <p className="mt-6 max-w-xl text-sm leading-relaxed text-ink-400">
+            Unaudited research software. The devnet demo runs a <span className="text-ink-100">simulated TEE</span> with a{" "}
+            <span className="text-ink-100">single maintainer-run verifier</span>, so it shows the payment flow, not real hardware
+            attestation. Do not use with real funds.
+          </p>
         </div>
 
         <SessionCard />
@@ -107,13 +112,13 @@ function SessionCard() {
   return (
     <div className="glow rounded-2xl border border-ink-700 bg-ink-900/90 font-mono text-[13px] backdrop-blur">
       <div className="flex items-center justify-between border-b border-ink-800 px-5 py-3">
-        <span className="text-ink-300">session · aqxL…88KF</span>
+        <span className="text-ink-300">example session · aqxL…88KF</span>
         <Pill>OPEN</Pill>
       </div>
       <div className="space-y-4 p-5">
         <div>
           <p className="mb-1 text-[11px] tracking-widest text-iris-300 uppercase">attestation</p>
-          <Row k="tee" v="Intel TDX + H100 CC" />
+          <Row k="tee" v="Intel TDX" />
           <Row k="measurement" v="a3f1…9c2e ✓ approved" tone="text-mint-300" />
           <Row k="committee" v="2 / 3 verifiers" />
         </div>

@@ -2,6 +2,8 @@
 
 This document describes how AgentsPay works: components, on-chain accounts, the settlement rule, the attestation pipeline, the HTTP protocol, and the security model. For the motivation, see [project-overview.md](./project-overview.md).
 
+> **Status: research prototype, unaudited.** This document describes the *target* design. The program is deployed on devnet only, as a demo that runs the **simulated TEE** with a **single maintainer-run verifier**. No real hardware attestation is involved. See [13. Known limitations](#13-known-limitations).
+
 - [1. System at a glance](#1-system-at-a-glance)
 - [2. Repository layout](#2-repository-layout)
 - [3. On-chain program](#3-on-chain-program)
@@ -54,6 +56,8 @@ There are three trust anchors:
 1. **Hardware**: the TEE vendor's root of trust (Intel, AMD, NVIDIA) signs a quote over the launch measurement and `REPORTDATA`.
 2. **Governance**: the admin approves which *workload measurements* (reproducible builds of gateway + model) may be paid for.
 3. **Verifier committee**: M-of-N keys attest that they verified the vendor quote. Today this is a committee; the design leaves room for a ZK proof instead.
+
+**What exists today.** The gateway implements a simulated TEE and Intel TDX. The TDX path has not yet been run on real hardware. SEV-SNP and NVIDIA GPU CC, shown in the diagram, are roadmap. The devnet deployment replaces anchor 1 with the simulated vendor key and anchor 3 with a 1-of-1 committee run by the maintainer, so it demonstrates the payment flow, not the trust model.
 
 ## 2. Repository layout
 
@@ -186,7 +190,7 @@ sequenceDiagram
 | Intel TDX | `SHA-384(MRTD ‖ RTMR0 ‖ RTMR1 ‖ RTMR2 ‖ RTMR3)`: pins firmware, kernel, cmdline and the app layer |
 | AMD SEV-SNP | report `MEASUREMENT` (roadmap) |
 | NVIDIA CC | CPU CVM measurement + GPU evidence via NRAS, nonce = report data (roadmap) |
-| Simulated | `SHA-384("agentspay-gateway:<ver>|backend=<b>|model=<m>")`, signed by a public dev "vendor" key |
+| Simulated | `SHA-384("agentspay-gateway:<ver>\|backend=<b>\|model=<m>")`, signed by a public dev "vendor" key (no hardware involved) |
 
 **Verifier implementation status.** Simulated: full. TDX: parsing, measurement derivation and key binding are implemented; signature-chain and TCB verification are delegated to an external DCAP tool via `DCAP_VERIFY_CMD`, and the verifier refuses if none is configured. SEV-SNP, NVIDIA and Nitro are refused with an explicit reason.
 
@@ -291,7 +295,10 @@ PaidFeedback { session, provider, agent_asset, payer, mint, settled, units, rati
 
 ## 13. Known limitations
 
-- **Unaudited.** Localnet only. Do not use with real funds.
+- **Research prototype, unaudited.** Deployed on devnet only (not mainnet). Do not use with real funds.
+- **The devnet deployment uses the simulated TEE** (`allow_simulated_tee = true`). Its "vendor" signing key is public and deterministic, so anyone can produce a quote that verifies. There is no real hardware attestation on devnet.
+- **The devnet verifier committee is 1-of-1, run by the maintainer.** Approval there is trusted, not independent. Real deployments need an M-of-N committee of independent operators, or the ZK verifier on the roadmap.
+- **The TDX path has not been run on real TDX hardware.** Quote generation, parsing and measurement derivation are implemented. Signature-chain and TCB checks depend on an external DCAP tool.
 - The verifier fetches arbitrary `evidence_uri`s. Run it isolated (SSRF), with timeouts and size limits (implemented).
 - The gateway's metering ledger is a local JSON file, single process. Production needs a durable store.
 - Settlement requires the attestation to be valid *at settle time*, so providers must settle before expiry and re-attest on rotation.

@@ -71,7 +71,12 @@ const guarantees = [
 
 export function Security() {
   return (
-    <Section id="security" eyebrow="Guarantees" title="Who can cheat whom? Nobody gets a free lunch.">
+    <Section
+      id="security"
+      eyebrow="Design guarantees"
+      title="Who can cheat whom? Nobody gets a free lunch."
+      lead="These hold by design, assuming a genuine TEE and an honest verifier quorum. The devnet demo has neither (simulated TEE, one maintainer-run verifier), and none of this has been audited yet."
+    >
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {guarantees.map(({ icon: Icon, title, body }) => (
           <Card key={title}>
@@ -126,16 +131,34 @@ export function Quickstart() {
         </pre>
       </div>
       <p className="mt-4 text-sm text-ink-400">
-        Requires Rust, Solana CLI 4.x, Anchor 1.2 and Bun 1.4. The demo uses a simulated TEE; real deployments set{" "}
-        <Code>allow_simulated_tee = false</Code> and run the gateway in a TDX or SEV-SNP confidential VM.
+        Requires Rust, Solana CLI 4.x, Anchor 1.2 and Bun 1.4. The local demo and the devnet deployment both use a simulated TEE. A
+        production deployment would set <Code>allow_simulated_tee = false</Code> and run the gateway in a TDX confidential VM (SEV-SNP
+        is on the roadmap).
       </p>
     </Section>
   );
 }
 
 const roadmap = [
-  { phase: "Now", items: ["Anchor program: attestation, sessions, vaults, credits, paid feedback", "TS SDK, gateway (simulated + TDX), verifier, agent demo"] },
-  { phase: "Next", items: ["SEV-SNP and NVIDIA CC (NRAS) verifiers", "x402 `upto` / MPP `session` HTTP compatibility", "8004 bridge: PaidFeedback → giveFeedback"] },
+  {
+    phase: "Now",
+    items: [
+      "Anchor program: attestation, sessions, vaults, credits, paid feedback",
+      "TS SDK, gateway (simulated + TDX), verifier, agent demo",
+      "Devnet demo: simulated TEE, single maintainer-run verifier",
+    ],
+  },
+  {
+    phase: "Next",
+    items: [
+      "TDX path on real hardware",
+      "Independent multi-party verifier committee",
+      "Security audit",
+      "SEV-SNP and NVIDIA CC (NRAS) verifiers",
+      "x402 `upto` / MPP `session` HTTP compatibility",
+      "8004 bridge: PaidFeedback → giveFeedback",
+    ],
+  },
   { phase: "Later", items: ["ZK attestation: SP1 / RISC Zero DCAP proof → Groth16 on alt_bn128", "Payment Channels interop: AgentsPay as a PDA payee", "Credit AMMs and capacity futures"] },
 ];
 

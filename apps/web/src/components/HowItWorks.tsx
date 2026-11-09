@@ -96,7 +96,7 @@ function Diagram() {
         <div className={`${box} border-mint-400/40`}>
           <Server className="mx-auto mb-1 size-5 text-mint-300" />
           Provider gateway in TEE
-          <p className="mt-1 text-[11px] text-ink-400">TDX / SEV-SNP CVM + GPU CC · receipt key never leaves</p>
+          <p className="mt-1 text-[11px] text-ink-400">TDX CVM (simulated in demo) · receipt key never leaves</p>
         </div>
         <Arrow label="voucher + receipt" />
         <div className={box}>

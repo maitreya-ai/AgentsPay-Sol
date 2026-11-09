@@ -81,7 +81,9 @@ export function simulatedMeasurement(descriptor: string): Uint8Array {
 // ---------------------------------------------------------------------------
 // The "simulated vendor" root key is public and deterministic. It stands in
 // for Intel/AMD/NVIDIA certificate chains so the full verifier pipeline can be
-// exercised on localnet. Deployments must set `allow_simulated_tee = false`.
+// exercised without TEE hardware (localnet and the devnet demo). It proves
+// nothing about real hardware: production deployments must set
+// `allow_simulated_tee = false`.
 
 const SIM_VENDOR_SEED = sha256(new TextEncoder().encode("agentspay:simulated-tee-vendor:v1"));
 export const SIMULATED_VENDOR = nacl.sign.keyPair.fromSeed(SIM_VENDOR_SEED);

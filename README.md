@@ -12,13 +12,18 @@ Pay for compute only when the hardware proves it.
 ![Solana](https://img.shields.io/badge/Solana-program-8a5cff.svg)
 ![Anchor](https://img.shields.io/badge/Anchor-1.2.2-3ee9a9.svg)
 ![Bun](https://img.shields.io/badge/Bun-1.4-f9f1e1.svg)
-[![Devnet](https://img.shields.io/badge/devnet-live-14d38f.svg)](https://explorer.solana.com/address/EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT?cluster=devnet)
+[![Devnet](https://img.shields.io/badge/devnet-live%20demo-14d38f.svg)](https://explorer.solana.com/address/EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT?cluster=devnet)
+![Status: research prototype](https://img.shields.io/badge/status-research%20prototype-f5a524.svg)
 
 [Overview](docs/project-overview.md) · [Architecture](docs/architecture.md) · [Live on devnet](#live-on-devnet) · [Quickstart](#quickstart) · [SDK](#use-the-sdk) · [Website](#website)
 
 <img src="docs/assets/site-hero.png" alt="AgentsPay website" width="860" />
 
 </div>
+
+> [!IMPORTANT]
+> **Research prototype. Unaudited. Do not use with real funds.**
+> The program is deployed on **devnet only** (not mainnet). The devnet demo runs a **simulated TEE**: a public development key stands in for the Intel/AMD/NVIDIA signing chain, so no real hardware attestation takes place. Attestations are approved by a **single verifier run by the maintainer**. The Intel TDX path is implemented but has not been run on real TDX hardware. See [Status & roadmap](#status--roadmap).
 
 ---
 
@@ -41,7 +46,7 @@ The program pays `min(voucher, N × price, deposit)`, **and only while the provi
 
 ```mermaid
 flowchart LR
-  A[Agent] -- "sealed prompt + voucher" --> G["Gateway in TEE<br/>(TDX / SEV-SNP + GPU CC)"]
+  A[Agent] -- "sealed prompt + voucher" --> G["Gateway in TEE<br/>(Intel TDX; simulated in the demo)"]
   G -- "response + enclave receipt" --> A
   G -- "[Ed25519 voucher, Ed25519 receipt, settle]" --> P[[AgentsPay program]]
   V[Verifier committee] -- approve_attestation --> P
@@ -61,6 +66,9 @@ Plus an off-chain toolkit in TypeScript on **Bun**: SDK, OpenAI-compatible provi
 
 ## Live on devnet
 
+> [!NOTE]
+> This is a **demo deployment, not a security boundary.** It runs the **simulated TEE** (`allow_simulated_tee = true`) and a **one-member verifier committee run by the maintainer**. It shows the full payment flow working on a public cluster. It does not prove anything about real hardware.
+
 | | Address |
 | --- | --- |
 | **Program** | [`EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT`](https://explorer.solana.com/address/EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT?cluster=devnet) |
@@ -70,11 +78,11 @@ Plus an off-chain toolkit in TypeScript on **Bun**: SDK, OpenAI-compatible provi
 
 Real transactions from the end-to-end demo on devnet:
 
-- 🛡️ [Verifier approves a provider's TEE attestation](https://explorer.solana.com/tx/5JWMqeBxTTqY9THZ2gyaAoD6sbxZpedaoK11PJPs8S6PsRh5H2wiD4Ew89Z4LiE8nWdQVi3Zg6dJmfwuMakJN3nT?cluster=devnet)
+- 🛡️ [Verifier approves a provider's (simulated) TEE attestation](https://explorer.solana.com/tx/5JWMqeBxTTqY9THZ2gyaAoD6sbxZpedaoK11PJPs8S6PsRh5H2wiD4Ew89Z4LiE8nWdQVi3Zg6dJmfwuMakJN3nT?cluster=devnet)
 - ⚡ [One transaction settles 3 paid inference calls (voucher + enclave receipt) and refunds the rest](https://explorer.solana.com/tx/46WqbkgqmwT9GoYeA8xZgCCdZLQpxSoAiixZDNuogqzrBDp9ZsX1nezfQQF5sX3sdnx7wKqS66mr3fjqyfqMLpCr?cluster=devnet)
 - ⭐ [Payment-backed rating from the agent](https://explorer.solana.com/tx/kF8Edi4fDEDaFPV34nryv3ruoUSU7epsdYwcVFikwkPjYPXgVQ85g8mSRqiCHe6djDFZt4gpsE5hozJf43ENGHp?cluster=devnet)
 
-All addresses are in [`deployments/devnet.json`](deployments/devnet.json). The devnet deployment uses the **simulated TEE** and a one-member verifier committee run by the maintainer, so treat it as a demo, not a security boundary.
+All addresses are in [`deployments/devnet.json`](deployments/devnet.json).
 
 Run the agent yourself against devnet: `bash scripts/demo-devnet.sh` (after `bun run bootstrap` with `RPC_URL=https://api.devnet.solana.com`; see [Deploy to devnet](#deploy-to-devnet)).
 
@@ -200,17 +208,19 @@ The site explains the problem and protocol and includes a **live settlement simu
 
 ## Status & roadmap
 
-> ⚠️ **Unaudited research software.** Localnet only. Do not use with real funds.
+> ⚠️ **Research prototype. Unaudited. Do not use with real funds.** Deployed on devnet only (not mainnet), as a demo with a simulated TEE and a single maintainer-run verifier. Not production-ready.
 
 - [x] Program: attestation registry, attested sessions, vaults, credits, paid feedback
 - [x] SDK, gateway (simulated + TDX), verifier (simulated + TDX + DCAP hook), agent demo, website
+- [x] Devnet deployment (demo: simulated TEE, 1-of-1 maintainer-run verifier committee)
+- [ ] Run the TDX path end to end on real TDX hardware
+- [ ] Independent, multi-party verifier committee
+- [ ] Security audit
 - [ ] SEV-SNP, NVIDIA CC (NRAS) and AWS Nitro verifiers
 - [ ] x402 `upto` / MPP `session` wire compatibility
 - [ ] 8004 bridge: `PaidFeedback` → `giveFeedback`
 - [ ] ZK attestation: SP1 / RISC Zero DCAP proof → Groth16 on `alt_bn128`
 - [ ] Payment Channels interop: AgentsPay as an attested PDA payee
-- [x] Devnet deployment
-- [ ] Security audit
 
 ## Contributing
 

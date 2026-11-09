@@ -5,6 +5,8 @@
 
 This document explains *why* AgentsPay exists: the landscape it builds on, the gaps it closes, who it is for, and what is and isn't in scope. For *how* it works, see [architecture.md](./architecture.md).
 
+> **Status: research prototype, unaudited.** Deployed on devnet only, as a demo that runs a **simulated TEE** with a **single maintainer-run verifier**. It does not yet perform real hardware attestation. See [7. Status](#7-status).
+
 ---
 
 ## 1. Context: Solana is where agents pay
@@ -70,11 +72,13 @@ AgentsPay is an Anchor program plus a TypeScript toolkit (Bun). A provider's gat
 - TypeScript SDK: PDAs, message codecs, sealed prompts, evidence helpers and a typed client.
 - Reference gateway: OpenAI-compatible, sealed prompts, voucher admission, enclave receipts, a settlement worker. Simulated and Intel TDX (configfs-tsm) enclaves.
 - Verifier service: simulated + TDX evidence checks, an external DCAP hook, a re-check and revoke loop.
-- Agent demo and a one-command localnet demo.
+- Agent demo, a one-command localnet demo, and a devnet demo deployment (simulated TEE, single maintainer-run verifier).
 - Project website (Vite + React + Tailwind) with a live settlement simulator.
 
 **Out of scope for now / roadmap**
 
+- Real hardware attestation in a public deployment (devnet uses the simulated TEE).
+- An independent, multi-party verifier committee (devnet has one maintainer-run verifier).
 - On-chain or ZK verification of vendor quotes (committee only today).
 - SEV-SNP, NVIDIA CC (NRAS) and AWS Nitro verifiers.
 - Wire compatibility with x402 `upto` / MPP `session` (the protocol is modelled on them but not identical).
@@ -86,9 +90,12 @@ AgentsPay is an Anchor program plus a TypeScript toolkit (Bun). A provider's gat
 
 | Area | Status |
 | --- | --- |
-| Program | Feature-complete for v0.1; all tests pass on LiteSVM. **Live on devnet** at `EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT`; not on mainnet. |
-| SDK / gateway / verifier / demo | Working end to end on `solana-test-validator` and on **devnet** with the simulated TEE. |
+| Overall | **Research prototype.** Unaudited, not production-ready. Do not use with real funds. |
+| Program | Feature-complete for v0.1; all tests pass on LiteSVM. **Live on devnet** at `EZsX7kN4Zb555Aaov2v9MBUC543JVmL5P6cQGAytUkdT` as a demo; not on mainnet. |
+| SDK / gateway / verifier / demo | Working end to end on `solana-test-validator` and on **devnet** with the **simulated TEE**. |
+| Verifier committee | Devnet: one verifier, run by the maintainer (1-of-1). Not independent. |
 | TDX path | Implemented (quote generation via configfs-tsm, parsing, measurement derivation); not yet exercised on real hardware. |
+| Security audit | None yet. |
 | Website | Builds; static, deployable to any host. |
 
 ## 8. Sources

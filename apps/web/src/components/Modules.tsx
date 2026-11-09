@@ -43,7 +43,7 @@ const modules = [
     name: "Off-chain toolkit",
     pitch: "Everything around the program, in TypeScript on Bun.",
     ixs: ["@agentspay/sdk", "gateway", "verifier", "agent-demo", "web"],
-    points: ["OpenAI-compatible gateway with sealed prompts", "Verifier with simulated + TDX paths", "One-command localnet demo"],
+    points: ["OpenAI-compatible gateway with sealed prompts", "Verifier with simulated + TDX paths", "One-command localnet demo; devnet demo deployment"],
   },
 ];
 
